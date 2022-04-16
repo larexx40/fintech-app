@@ -21,7 +21,20 @@ async function authenticate(){
     
 }
 
-async function verifyBVN (){
+exports.verifyBankAccount= async (req, res)=>{
+    const accessToken = await authenticate();
+    const headers = {
+        Authorization: 'Bearer ' + accessToken
+    }
+
+    const response = await axios.get(baseUrl + '/api/v1/disbursements/account/validate?accountNumber=0068687503&bankCode=232', null, {headers});
+    const responseBody = response.data
+    console.log(responseBody);
+    res.status(200).send(responseBody);
+}
+
+//not working at test mode.
+exports.verifyBVN =  async (req, res)=>{
     const input = {
         "bvn":"22222222226",
         "name": "OLATUNDE JOSIAH OGUNBOYEJO",
@@ -38,23 +51,14 @@ async function verifyBVN (){
     const response = await axios.post(url, input, {headers});
     const responseBody = response.data;
     console.log(responseBody);
+    res.status(200).send(responseBody);
 }
 
-async function verifyAcc (){
-    const accessToken = await authenticate();
-    const headers = {
-        Authorization: 'Bearer ' + accessToken
-    }
+exports.reserveAcc = async (req, res)=>{
 
-    const response = await axios.get(baseUrl + '/api/v1/disbursements/account/validate?accountNumber=0068687503&bankCode=232', null, {headers});
-    const responseBody = response.data;
-    console.log(responseBody);
-}
-
-async function reserveAcc () {
     const input ={
-        "accountReference": "abc1234",
-        "accountName": "Test Reserved Account",
+        "accountReference": "atg209",
+        "accountName": "Test Reserved Accountname7",
         "currencyCode": "NGN",
         "contractCode": contractCode,
         "customerEmail": "test@tester.com",
@@ -70,11 +74,7 @@ async function reserveAcc () {
     const response = await axios.post(baseUrl + '/api/v2/bank-transfer/reserved-accounts', input, {headers});
     const responseBody = response.data;
     console.log(responseBody);
-}
-
-module.exports = {
-    authenticate: authenticate,
-    verifyBVN: verifyBVN,
-    verifyAcc: verifyAcc,
-    reserveAcc:reserveAcc,
+    const { accountName, customerEmail, accounts } = responseBody
+    console.log(accountName);
+    res.status(200).send(responseBody)
 }

@@ -2,4 +2,6 @@ node_modules
 package-lock.json
 bin
 .env
+config.js
+views/.env
 app.js

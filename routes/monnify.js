@@ -1,11 +1,13 @@
 const express =require('express');
 const monnifyServices = require('../controller/monnify')
 const monnify = express.Router();
+require('dotenv').config()
 
 
-monnify.get('/auth', monnifyServices.authenticate, (req, res)=>{
-    res.status(200).send('success');
-})
+monnify.post('/verifyBVN', monnifyServices.verifyBVN)
 
+monnify.get('/verifyAcc', monnifyServices.verifyBankAccount, (req, res)=>{})
+
+monnify.post('/reserveAcc', monnifyServices.reserveAcc)
 
 module.exports = monnify;
