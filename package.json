@@ -17,7 +17,8 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.15",
+    "twilio": "^3.76.1"
   },
   "description": "\"Fintech application using moonpay API\"",
   "main": "app.js",
