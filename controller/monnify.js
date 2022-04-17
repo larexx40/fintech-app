@@ -22,59 +22,74 @@ async function authenticate(){
 }
 
 exports.verifyBankAccount= async (req, res)=>{
-    const accessToken = await authenticate();
-    const headers = {
-        Authorization: 'Bearer ' + accessToken
-    }
+    try {
+        const accessToken = await authenticate();
+        const headers = {
+            Authorization: 'Bearer ' + accessToken
+        }
 
-    const response = await axios.get(baseUrl + '/api/v1/disbursements/account/validate?accountNumber=0068687503&bankCode=232', null, {headers});
-    const responseBody = response.data
-    console.log(responseBody);
-    res.status(200).send(responseBody);
+        const response = await axios.get(baseUrl + '/api/v1/disbursements/account/validate?accountNumber=0068687503&bankCode=232', null, {headers});
+        const responseBody = response.data
+        console.log(responseBody);
+        return res.status(200).send(responseBody);        
+    } catch (error) {
+        console.log(error);
+        return res.status(400).json(error);
+    }
 }
 
 //not working at test mode.
 exports.verifyBVN =  async (req, res)=>{
-    const input = {
-        "bvn":"22222222226",
-        "name": "OLATUNDE JOSIAH OGUNBOYEJO",
-        "dateOfBirth": "27-Apr-1993",
-        "mobileNo": "08142223149"
+    try {
+        const input = {
+            "bvn":"22222222226",
+            "name": "OLATUNDE JOSIAH OGUNBOYEJO",
+            "dateOfBirth": "27-Apr-1993",
+            "mobileNo": "08142223149"
+        }
+    
+        const accessToken = await authenticate();
+        const headers = {
+            Authorization: 'Bearer ' + accessToken
+        }
+    
+        const url = 'https://api.monnify.com/api/v1/vas/bvn-details-match'
+        const response = await axios.post(url, input, {headers});
+        const responseBody = response.data;
+        console.log(responseBody);
+        return res.status(200).send(responseBody)
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send(error)
     }
-
-    const accessToken = await authenticate();
-    const headers = {
-        Authorization: 'Bearer ' + accessToken
-    }
-
-    const url = 'https://api.monnify.com/api/v1/vas/bvn-details-match'
-    const response = await axios.post(url, input, {headers});
-    const responseBody = response.data;
-    console.log(responseBody);
-    res.status(200).send(responseBody);
 }
 
 exports.reserveAcc = async (req, res)=>{
-
-    const input ={
-        "accountReference": "atg209",
-        "accountName": "Test Reserved Accountname7",
-        "currencyCode": "NGN",
-        "contractCode": contractCode,
-        "customerEmail": "test@tester.com",
-        "bvn": "21212121212",
-        "customerName": "John Doe", 
-        "getAllAvailableBanks": false,
-        "preferredBanks": ["035"]
+    try {
+        const input ={
+            "accountReference": "atg209",
+            "accountName": "Test Reserved Accountname7",
+            "currencyCode": "NGN",
+            "contractCode": contractCode,
+            "customerEmail": "test@tester.com",
+            "bvn": "21212121212",
+            "customerName": "John Doe", 
+            "getAllAvailableBanks": false,
+            "preferredBanks": ["035"]
+        }
+        const accessToken = await authenticate();
+        const headers = {
+            Authorization: 'Bearer ' + accessToken
+        }
+        const response = await axios.post(baseUrl + '/api/v2/bank-transfer/reserved-accounts', input, {headers});
+        const responseBody = response.data;
+        console.log(responseBody);
+        const { accountName, customerEmail, accounts } = responseBody
+        console.log(accountName);
+        return res.status(200).send(responseBody)
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send(error)
     }
-    const accessToken = await authenticate();
-    const headers = {
-        Authorization: 'Bearer ' + accessToken
-    }
-    const response = await axios.post(baseUrl + '/api/v2/bank-transfer/reserved-accounts', input, {headers});
-    const responseBody = response.data;
-    console.log(responseBody);
-    const { accountName, customerEmail, accounts } = responseBody
-    console.log(accountName);
-    res.status(200).send(responseBody)
 }
