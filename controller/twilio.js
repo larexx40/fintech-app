@@ -42,24 +42,3 @@ exports.verifyOtp =async (req, res)=>{
         return res.status(400).json(error);
     }
 }
-
-async function otp(phoneNo, token){
-    sentOtp= ()=>{
-        const {to} = phoneNo
-        const sendOtp = await client.verify.services(`${process.env.TWILIO_SERVICEID}`)
-        .verifications
-        .create({to , channel: 'sms'})
-        const status = sendOtp.status;
-        return status
-    }
-
-    verifyOtp = ()=>{
-        const {to} = phoneNo
-        const {code}= token
-        const verifyOtp = await client.verify.services('VAead84de8656d7d20fd3bbda037d53da1')
-        .verificationChecks
-        .create({to, code})
-        const status = verifyOtp.status;
-        console.log(status);       
-    }
-}
