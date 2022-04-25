@@ -1,9 +1,13 @@
-var express = require('express');
-var router = express.Router();
+const express = require("express");
+const users = express.Router();
+const dbOperation = require('../controller/users');
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+users.get('/', dbOperation.getUsers );
+users.get('/:id', dbOperation.getUsersByID);
+users.get('/byname', dbOperation.getUserByName)
+users.post('/', dbOperation.createUser);
+users.put('/:id', dbOperation.updateUser);
+users.delete('/:id', dbOperation.deleteUserByID);
+users.delete('/deleteall', dbOperation.deleteAllUser);
 
-module.exports = router;
+module.exports = users;
